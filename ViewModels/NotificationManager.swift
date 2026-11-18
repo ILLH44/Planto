@@ -8,7 +8,7 @@ class NotificationManager {
     // Hour of the day when reminders fire (10:00 AM)
     private let reminderHour = 10
 
-    // How many future reminders to schedule for multi-day intervals
+    // How many future reminders to schedule
     private let scheduledCount = 30
 
     // Ask the user for permission to show notifications
@@ -43,23 +43,12 @@ class NotificationManager {
         let calendar = Calendar.current
         let days = interval(for: plant.wateringDays)
 
-        // First reminder: today at 10:00 if still ahead, otherwise tomorrow at 10:00
-        var first = calendar.date(bySettingHour: reminderHour, minute: 0, second: 0, of: Date()) ?? Date()
-        if first <= Date() {
-            first = calendar.date(byAdding: .day, value: 1, to: first) ?? first
-        }
+        // Save date at the reminder hour (10:00 AM)
+        let saveDay = calendar.date(bySettingHour: reminderHour, minute: 0, second: 0, of: Date()) ?? Date()
 
-        // Every day: one repeating notification is enough
-        if days == 1 {
-            let time = calendar.dateComponents([.hour, .minute], from: first)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: time, repeats: true)
-            add(content, id: "\(plant.id.uuidString)-0", trigger: trigger)
-            return
-        }
-
-        // Other intervals: schedule many separate notifications, N days apart
-        for i in 0..<scheduledCount {
-            guard let date = calendar.date(byAdding: .day, value: i * days, to: first) else { continue }
+        // Schedule separate notifications, starting one interval AFTER the save date
+        for i in 1...scheduledCount {
+            guard let date = calendar.date(byAdding: .day, value: i * days, to: saveDay) else { continue }
             let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
             let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
             add(content, id: "\(plant.id.uuidString)-\(i)", trigger: trigger)
@@ -68,7 +57,7 @@ class NotificationManager {
 
     // Cancel every notification that belongs to a plant
     func cancel(for plant: Plant) {
-        let ids = (0..<scheduledCount).map { "\(plant.id.uuidString)-\($0)" }
+        let ids = (0...scheduledCount).map { "\(plant.id.uuidString)-\($0)" }
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(withIdentifiers: ids)
     }
