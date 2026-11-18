@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct PlantoApp: App {
+    // Ask for notification permission when the app launches
     init() {
         NotificationManager.shared.requestPermission()
     }

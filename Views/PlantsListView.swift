@@ -57,7 +57,7 @@ struct PlantsListView: View {
 
     // MARK: - States
 
-    // Shown when there are no plants yet (20 semibold)
+    // Shown when there are no plants yet
     private var emptyView: some View {
         VStack {
             Spacer()
@@ -76,7 +76,6 @@ struct PlantsListView: View {
             Image("plantDone")
                 .resizable().scaledToFit()
                 .frame(width: 200, height: 200)
-            // TODO: confirm sizes in Sketch
             Text("All Done! 🎉")
                 .font(.heading)
                 .foregroundStyle(.white)
@@ -92,7 +91,7 @@ struct PlantsListView: View {
     // Shown when there are plants that still need water
     private var listView: some View {
         VStack(spacing: 0) {
-            // Status message: 18 regular, tracking 0.23
+            // Status message that changes with progress
             Text(viewModel.statusMessage)
                 .font(.rowText)
                 .tracking(0.23)
@@ -107,6 +106,7 @@ struct PlantsListView: View {
 
             // List is used so swipe-to-delete works
             List {
+                // Pending plants first, watered plants last
                 ForEach(viewModel.sortedPlants) { plant in
                     PlantRow(plant: plant, onToggle: { viewModel.toggleWatered(plant) })
                         .contentShape(Rectangle())
