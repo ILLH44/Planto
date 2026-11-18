@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    // For testing: starts from the onboarding screen on every launch
-    @State private var hasSeenOnboarding = false
+    // Remembers that the user has already seen the onboarding
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     // Before submitting: replace the line above with this one
     // so the app remembers that the user has seen the onboarding

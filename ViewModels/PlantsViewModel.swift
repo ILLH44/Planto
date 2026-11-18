@@ -24,6 +24,10 @@ class PlantsViewModel {
     var allDone: Bool {
         !plants.isEmpty && wateredCount == plants.count
     }
+    // Pending plants first, watered plants at the bottom
+    var sortedPlants: [Plant] {
+        plants.filter { !$0.isWatered } + plants.filter { $0.isWatered }
+    }
 
     // Message shown above the progress bar
     var statusMessage: String {

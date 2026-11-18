@@ -107,7 +107,7 @@ struct PlantsListView: View {
 
             // List is used so swipe-to-delete works
             List {
-                ForEach(viewModel.plants) { plant in
+                ForEach(viewModel.sortedPlants) { plant in
                     PlantRow(plant: plant, onToggle: { viewModel.toggleWatered(plant) })
                         .contentShape(Rectangle())
                         // Tapping the row opens the edit sheet
