@@ -5,8 +5,8 @@ class NotificationManager {
     // Single shared instance used across the app
     static let shared = NotificationManager()
 
-    // Hour of the day when reminders fire (9:00 AM)
-    private let reminderHour = 9
+    // Hour of the day when reminders fire (10:00 AM)
+    private let reminderHour = 10
 
     // How many future reminders to schedule for multi-day intervals
     private let scheduledCount = 30
@@ -43,7 +43,7 @@ class NotificationManager {
         let calendar = Calendar.current
         let days = interval(for: plant.wateringDays)
 
-        // First reminder: today at 9:00 if still ahead, otherwise tomorrow at 9:00
+        // First reminder: today at 10:00 if still ahead, otherwise tomorrow at 9:00
         var first = calendar.date(bySettingHour: reminderHour, minute: 0, second: 0, of: Date()) ?? Date()
         if first <= Date() {
             first = calendar.date(byAdding: .day, value: 1, to: first) ?? first
